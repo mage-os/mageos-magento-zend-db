@@ -209,6 +209,12 @@ abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
         // remove "foo\"bar"
         $sql = preg_replace("/\"(\\\\\"|[^\"])*\"/Us", '', $sql);
 
+        if ($sql === null) {
+            // this preg_replace call can return NULL in case of error (PREG_BACKTRACK_LIMIT_ERROR).
+            // In this case the result of this method will be an empty string.
+            return '';
+        }
+        
         // get the character for delimited id quotes,
         // this is usually " but in MySQL is `
         $d = $this->_adapter->quoteIdentifier('a');
