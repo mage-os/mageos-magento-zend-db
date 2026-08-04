@@ -226,6 +226,11 @@ abstract class Zend_Db_Statement implements Zend_Db_Statement_Interface
         $de = preg_quote($de);
         // Note: $de and $d where never used..., now they are:
         $sql = preg_replace("/$d($de|\\\\{2}|[^$d])*$d/Us", '', $sql);
+        if ($sql === null) {
+            // this preg_replace call can return NULL in case of error (PREG_BACKTRACK_LIMIT_ERROR).
+            // In this case the result of this method will be an empty string.
+            return '';
+        }
         return $sql;
     }
 
